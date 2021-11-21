@@ -83,3 +83,16 @@ fn issue_97() {
 
     assert_eq!(html! { (Pinkie) }.into_string(), "42");
 }
+
+#[test]
+fn collect_into_markup() {
+    let collected = ["Hello ", "lovely ", "World"]
+        .into_iter()
+        .map(|string| html! { span { (string) } })
+        .collect::<maud::Markup>();
+
+    assert_eq!(
+        collected.into_string(),
+        "<span>Hello </span><span>lovely </span><span>World</span>"
+    );
+}

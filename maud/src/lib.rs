@@ -193,6 +193,25 @@ impl<T: AsRef<str>> Render for PreEscaped<T> {
     }
 }
 
+// Based on standard library's FromIterator<String> for String implementation
+impl<T: AsRef<str> + Into<String>> FromIterator<PreEscaped<T>> for PreEscaped<String> {
+    fn from_iter<I: IntoIterator<Item = PreEscaped<T>>>(iter: I) -> PreEscaped<String> {
+        let mut iterator = iter.into_iter();
+
+        // Because we're iterating over `String`s, we can avoid at least
+        // one allocation by getting the first string from the iterator
+        // and appending to it all the subsequent strings.
+        match iterator.next() {
+            None => PreEscaped(String::new()),
+            Some(buf) => {
+                let mut buf = buf.into_string();
+                buf.extend(iterator.map(|x| x.into_string()));
+                PreEscaped(buf)
+            }
+        }
+    }
+}
+
 /// A block of markup is a string that does not need to be escaped.
 ///
 /// The `html!` macro expands to an expression of this type.
