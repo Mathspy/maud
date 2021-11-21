@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Support for collecting a `Markup` Iterator into `Markup`
+  [#322](https://github.com/lambda-fairy/maud/pull/322)
 - Remove blanket `Render` impl for `T: Display`
   [#320](https://github.com/lambda-fairy/maud/pull/320)
 
